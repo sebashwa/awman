@@ -1,0 +1,4 @@
+.TH "\fBfoo\fP \fI\fBbar\fP \fRbaz\fP" 2 "lololol"
+meh
+.SS "\firlFüoobar hehehe" .SS BarBaz \" Foocomment
+dunno what this is going to be
