@@ -1,4 +1,14 @@
 .TH "\fBfoo\fP \fI\fBbar\fP \fRbaz\fP" 2 "lololol"
-meh
-.SS "\firlFüoobar hehehe" .SS BarBaz \" Foocomment
+.SS Something
 dunno what this is going to be
+
+
+.BI \-r name = n
+
+Any such change becomes effective with the first use of
+.BR .NH ,
+.I after
+the new alias is defined.
+
+.SH Foobar
+

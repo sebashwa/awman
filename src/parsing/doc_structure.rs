@@ -18,12 +18,19 @@ pub struct PageTitle {
     pub header_middle: Option<StyledText>
 }
 
-pub fn eat_title(given: &str) -> IResult<&str, PageTitle>  {
+type SectionHeading = StyledText;
+
+pub fn eat_page_title(line: &str) -> IResult<&str, PageTitle>  {
     let (rest, (_, title, section, footer_middle, footer_outside, header_middle)) =
-        tuple((tag(".TH"), txt_arg, opt(num_arg), opt(txt_arg), opt(txt_arg), opt(txt_arg)))(given)?;
+        tuple((tag(".TH"), txt_arg, opt(num_arg), opt(txt_arg), opt(txt_arg), opt(txt_arg)))(line)?;
 
     let title = PageTitle { title, section, footer_middle, footer_outside, header_middle };
 
+    Ok((rest, title))
+}
+
+pub fn eat_section_heading(line: &str) -> IResult<&str, SectionHeading>  {
+    let (rest, (_, title)) = tuple((tag(".SH"), txt_arg))(line)?;
     Ok((rest, title))
 }
 
@@ -40,7 +47,7 @@ mod tests {
         let title = roman_txt("Title");
         let expected = PageTitle { title, ..default_page_title() };
 
-        assert_eq!(eat_title(title_line), Ok(("", expected)));
+        assert_eq!(eat_page_title(title_line), Ok(("", expected)));
     }
 
     #[test]
@@ -50,7 +57,7 @@ mod tests {
         let title = roman_txt("Multi Word Title");
         let expected = PageTitle { title, ..default_page_title() };
 
-        assert_eq!(eat_title(title_line), Ok(("", expected)));
+        assert_eq!(eat_page_title(title_line), Ok(("", expected)));
     }
 
     #[test]
@@ -65,6 +72,6 @@ mod tests {
             header_middle: Some(roman_txt("Header")),
         };
 
-        assert_eq!(eat_title(title_line), Ok(("", expected)));
+        assert_eq!(eat_page_title(title_line), Ok(("", expected)));
     }
 }
