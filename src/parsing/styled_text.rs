@@ -1,11 +1,11 @@
 use nom::{
     IResult,
     branch::alt,
-    bytes::complete::{escaped_transform, tag, take_until, take_till, is_not},
+    bytes::complete::{escaped_transform, tag, take_until, is_not},
     combinator::{opt, value},
     character::complete::{not_line_ending},
     multi::{separated_list0},
-    sequence::{delimited, tuple},
+    sequence::tuple,
 };
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]

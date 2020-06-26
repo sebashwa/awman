@@ -6,14 +6,13 @@ use nom::{
 };
 
 use super::ManfileComponent;
-use super::helpers::{txt_arg, num_arg};
+use super::helpers::txt_arg;
 use super::styled_text::StyledText;
 
-type PageSection = u8;
 #[derive(Debug, PartialEq, Eq)]
 pub struct PageTitle {
     pub title: StyledText,
-    pub section: Option<PageSection>,
+    pub section: Option<StyledText>,
     pub footer_middle: Option<StyledText>,
     pub footer_outside: Option<StyledText>,
     pub header_middle: Option<StyledText>
@@ -23,7 +22,7 @@ type SectionHeading = StyledText;
 
 pub fn eat_page_title(line: &str) -> IResult<&str, ManfileComponent>  {
     let (rest, (_, title, section, footer_middle, footer_outside, header_middle)) =
-        tuple((tag(".TH"), txt_arg, opt(num_arg), opt(txt_arg), opt(txt_arg), opt(txt_arg)))(line)?;
+        tuple((tag(".TH"), txt_arg, opt(txt_arg), opt(txt_arg), opt(txt_arg), opt(txt_arg)))(line)?;
 
     let title = PageTitle { title, section, footer_middle, footer_outside, header_middle };
 
@@ -73,7 +72,7 @@ mod tests {
 
         let expected = ManfileComponent::PageTitle(PageTitle {
             title: roman_txt("Multi Title"),
-            section: Some(7),
+            section: Some(roman_txt("7")),
             footer_middle: Some(roman_txt("FtrMiddle")),
             footer_outside: Some(roman_txt("Ftrleft")),
             header_middle: Some(roman_txt("Header")),
@@ -89,7 +88,7 @@ mod tests {
 
         let expected = ManfileComponent::PageTitle(PageTitle {
             title: roman_txt("Title"),
-            section: Some(7),
+            section: Some(roman_txt("7")),
             footer_middle: Some(roman_txt("FtrMiddle")),
             footer_outside: Some(roman_txt("FtrLeft")),
             header_middle: Some(roman_txt("Header")),

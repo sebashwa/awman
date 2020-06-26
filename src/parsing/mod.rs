@@ -26,17 +26,15 @@ fn get_file_lines() -> Lines<BufReader<File>> {
         Err(e) => panic!(e)
     };
 
-    let reader = BufReader::new(file);
-    reader.lines()
+    BufReader::new(file).lines()
 }
 
 fn get_line_parser(line: &str) -> LineParser {
-    return LineParser::SinglelineParser(Box::new(eat_page_title));
+    LineParser::SinglelineParser(Box::new(eat_page_title))
 }
 
 fn parse(mut lines: Lines<BufReader<File>>, n: usize, mut result: Vec<ManfileComponent>) -> Vec<ManfileComponent> {
-    let le_line = lines.nth(n);
-    let line = match le_line {
+    let line = match lines.nth(n) {
         Some(l) => l.unwrap_or("".to_string()),
         None => return result
     };
