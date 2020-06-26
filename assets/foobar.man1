@@ -1,4 +1,4 @@
-.TH "\fBfoo\fP \fI\fBbar\fP \fRbaz\fP" 2 "lololol"
+.TH \fIfoo\fP 2 \fBbaz\fP "lololol lal"
 .SS Something
 dunno what this is going to be
 
@@ -11,4 +11,6 @@ Any such change becomes effective with the first use of
 the new alias is defined.
 
 .SH Foobar
+
+This is just some random text "and now I start quoting it"
 
