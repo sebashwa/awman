@@ -1,7 +1,7 @@
 use nom::{
     IResult,
     branch::alt,
-    bytes::complete::{escaped_transform, tag, take_until, is_not},
+    bytes::complete::{escaped_transform, tag, take_until, take_till, is_not},
     combinator::{opt, value},
     character::complete::{not_line_ending},
     multi::{separated_list0},
@@ -75,8 +75,8 @@ fn process_first_segment(segment: &str, is_styled: bool, previous_style: StringS
     }
 }
 
-fn digest_text(given: &str) -> IResult<&str, StyledText> {
-    let separate_by_style_prefix = separated_list0(tag(r"\f"), alt((take_until(r"\f"), take_until(r#"""#), not_line_ending)));
+pub fn eat_text(given: &str) -> IResult<&str, StyledText> {
+    let separate_by_style_prefix = separated_list0(tag(r"\f"), alt((take_until(r"\f"), not_line_ending)));
     let previous_style = StringStyle::Roman;
 
     if given == "" { return Ok(("", vec![])) }
@@ -96,14 +96,6 @@ fn digest_text(given: &str) -> IResult<&str, StyledText> {
     }
 
     Ok((rest, result))
-}
-
-fn digest_delimited_text(given: &str) -> IResult<&str, StyledText> {
-    delimited(tag("\""), digest_text, tag("\""))(given)
-}
-
-pub fn eat_text(given: &str) -> IResult<&str, StyledText> {
-    alt((digest_delimited_text, digest_text))(given)
 }
 
 #[cfg(test)]
@@ -128,7 +120,7 @@ mod tests {
 
     #[test]
     fn eat_text_can_digest_quote_delimited_sentence() {
-        assert_eq!(eat_text(r#""Foo Bär""#), Ok(("", roman_txt("Foo Bär"))));
+        assert_eq!(eat_text(r#""Some" Fi Fa "Foo Bär""#), Ok(("", roman_txt(r#""Some" Fi Fa "Foo Bär""#))));
     }
 
     #[test]
